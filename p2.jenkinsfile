@@ -14,10 +14,12 @@ pipeline {
 
         stage('Commit') {
             steps {
-                script {
+               script {
                     sh 'git checkout -b jenkins'
+                    // Ajoutez une modification dans un fichier ou modifiez un fichier existant
+                    sh 'echo "Jenkins build commit" > build-commit.txt'
                     sh 'git add .'
-                    sh "git commit -m 'Successful build'"
+                    sh "git commit -m 'Jenkins build commit'"
                     sh 'git status'
                 }
             }
