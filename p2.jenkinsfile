@@ -1,8 +1,15 @@
 pipeline {
     agent any
-    
+
     triggers {
-        pollSCM('* * * * *')
+        script {
+            def changes = scm.changesets.size()
+            if (changes > 0) {
+                currentBuild.result = 'SUCCESS' // Déclenche le pipeline uniquement si des changements sont détectés
+            } else {
+                currentBuild.result = 'ABORTED'
+            }
+        }
     }
 
     stages {
@@ -12,26 +19,11 @@ pipeline {
             }
         }
 
-        stage('Commit') {
+        stage('Build') {
             steps {
-                script {
-                    sh 'git checkout -b jenkins'
-                    sh 'echo "Jenkins build commit" > build-commit.txt'
-                    sh 'git add .'
-                    sh 'git commit -m "Jenkins build commit"'
-                    sh 'git status'
-                }
+                echo 'Building...'
             }
         }
-
-        stage('Push') {
-            steps {
-                script {
-                   sh 'git push https://github.com/GBIBANG/v3-jenkins_trigger.git jenkins:main'
-                }
-            }
-        }
-   
     }
 
     post {
@@ -40,3 +32,4 @@ pipeline {
         }
     }
 }
+
