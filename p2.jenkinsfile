@@ -27,7 +27,7 @@ pipeline {
         stage('Push') {
             steps {
                 script {
-                   sh 'git push https://github.com/usernhttps://github.com/GBIBANG/v3-jenkins_trigger.git jenkins:main'
+                   sh 'git push https://github.com/GBIBANG/v3-jenkins_trigger.git jenkins:main'
                 }
             }
         }
