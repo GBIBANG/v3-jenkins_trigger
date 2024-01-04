@@ -15,7 +15,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'mvn versions:set -DnewVersion=1.2.${BUILD_NUMBER}'
-                sh 'mvn clean install'
+                sh 'mvn clean install -DskipTests -T1C'
             }
         }
 
@@ -23,11 +23,12 @@ pipeline {
             steps {
                 script {
                     def version = sh(script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true).trim()
-                    sh "git tag -a v${version} -m \"Version ${version}\""
-                    sh 'git push origin v${version}'
+                    def cleanVersion = version.replaceAll('-SNAPSHOT', '')
+                    sh "git tag -a v${cleanVersion} -m 'Version ${cleanVersion}'"
+                    sh "git push origin v${cleanVersion}"
                 }
             }
-        }
+        }       
     }
 
     post {
