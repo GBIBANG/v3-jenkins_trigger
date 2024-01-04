@@ -25,7 +25,7 @@ pipeline {
                     sh "git config --global user.name 'GBIBANG'"
                     sh 'git add .'
                     sh "git commit -m 'Successful build après vérification'"
-                    sh 'git push origin master'
+                    sh 'git push'
                 }
             }
         }       
