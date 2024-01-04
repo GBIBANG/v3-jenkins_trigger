@@ -21,9 +21,10 @@ pipeline {
         stage('Commit and Push') {
             steps {
                 script {
+                    sh 'git checkout -b temp_branch'
                     sh 'git add .'
                     sh "git commit -m 'Successful build'"
-                    sh 'git push https://GBIBANG:Hello0505@2018@github.com/GBIBANG/v3-jenkins_trigger.git'
+                    sh 'git push https://GBIBANG:Hello0505@2018@github.com/GBIBANG/v3-jenkins_trigger.git temp_branch'
                 }
             }
         }
