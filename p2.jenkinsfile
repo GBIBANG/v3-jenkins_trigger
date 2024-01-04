@@ -14,18 +14,16 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn versions:set -DnewVersion=1.2.${BUILD_NUMBER}'
                 sh 'mvn clean install -DskipTests -T1C'
             }
         }
 
-        stage('Create and Push Tag') {
+        stage('Commit and Push') {
             steps {
                 script {
-                    def version = sh(script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true).trim()
-                    def cleanVersion = version.replaceAll('-SNAPSHOT', '').replaceAll('[^a-zA-Z0-9\\._-]', '_')
-                    sh "git tag -a v${cleanVersion} -m 'Version ${cleanVersion}'"
-                    sh "git push origin v${cleanVersion}"
+                    sh 'git add .'
+                    sh "git commit -m 'Successful build'"
+                    sh 'git push origin main'
                 }
             }
         }       
@@ -33,7 +31,6 @@ pipeline {
 
     post {
         always {
-            sh 'mvn versions:revert'
             cleanWs()
         }
     }
