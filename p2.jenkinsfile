@@ -1,10 +1,5 @@
 pipeline {
     agent any
-
-    environment {
-        GIT_USERNAME = 'GBIBANG'
-        GIT_PASSWORD = 'Hello0505@2018'
-    }
     
     triggers {
         pollSCM('* * * * *')
@@ -32,11 +27,7 @@ pipeline {
         stage('Push') {
             steps {
                 script {
-                     // Configure Git with username and token
-                    sh 'git config --global credential.helper "!f() { echo username=$GIT_USERNAME; echo password=$GIT_PASSWORD; }"'
-
-                    // Push to the branch 'jenkins'
-                    sh 'git push -u origin jenkins'
+                   sh 'git push https://github.com/username/projectname.git jenkins:main'
                 }
             }
         }
