@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+    
+    triggers {
+        pollSCM('* * * * *')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn versions:set -DnewVersion=1.2.${BUILD_NUMBER}'
+                sh 'mvn clean install'
+            }
+        }
+
+        stage('Create and Push Tag') {
+            steps {
+                def version = sh(script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true).trim()
+                sh "git tag -a v${version} -m 'Version ${version}'"
+                sh 'git push origin v${version}'
+            }
+        }
+    }
+
+    post {
+        always {
+            sh 'mvn versions:revert'
+            cleanWs()
+        }
+    }
+}
