@@ -12,10 +12,16 @@ pipeline {
             }
         }
 
+        stage('Build') {
+            steps {
+                sh 'mvn clean install -DskipTests -T1C'
+            }
+        }
+
         stage('Commit and Push') {
             steps {
                 script {
-                    sh 'git branch -m jenkins'
+                    sh 'git checkout -b jenkins'
                     sh 'git add .'
                     sh "git commit -m 'Successful build'"
                     sh 'git status'
